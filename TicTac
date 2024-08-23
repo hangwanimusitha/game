@@ -1,0 +1,110 @@
+import java.util.Scanner;
+
+public class TicTacToe {
+    // Define the board and player symbols
+    private static char[][] board = new char[3][3];
+    private static char currentPlayer = 'H';
+
+    public static void main(String[] args) {
+        initializeBoard();
+        printBoard();
+        playGame();
+    }
+
+    // Initialize the board with dashes
+    private static void initializeBoard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = '-';
+            }
+        }
+    }
+
+    // Display the current state of the board
+    private static void printBoard() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // Manage the game loop and player turns
+    private static void playGame() {
+        boolean gameOver = false;
+        Scanner scanner = new Scanner(System.in);
+
+        while (!gameOver) {
+            System.out.println("Player " + currentPlayer + ", enter your move (row and column): ");
+            int row = scanner.nextInt();
+            int col = scanner.nextInt();
+
+            if (row < 0 || col < 0 || row > 2 || col > 2) {
+                System.out.println("This position is out of bounds. Try again.");
+                continue;
+            }
+
+            if (board[row][col] != '-') {
+                System.out.println("This position is already taken. Try again.");
+                continue;
+            }
+
+            board[row][col] = currentPlayer;
+            printBoard();
+
+            // Check for a win or a draw
+            if (checkWin()) {
+                System.out.println("Player " + currentPlayer + " wins!");
+                gameOver = true;
+            } else if (isBoardFull()) {
+                System.out.println("The game is a draw!");
+                gameOver = true;
+            }
+
+            // Switch players
+            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+        }
+        scanner.close();
+    }
+
+    // Check for a winning condition
+    private static boolean checkWin() {
+        // Check rows
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == currentPlayer && board[i][1] == currentPlayer && board[i][2] == currentPlayer) {
+                return true;
+            }
+        }
+
+        // Check columns
+        for (int i = 0; i < 3; i++) {
+            if (board[0][i] == currentPlayer && board[1][i] == currentPlayer && board[2][i] == currentPlayer) {
+                return true;
+            }
+        }
+
+        // Check diagonals
+        if (board[0][0] == currentPlayer && board[1][1] == currentPlayer && board[2][2] == currentPlayer) {
+            return true;
+        }
+
+        if (board[0][2] == currentPlayer && board[1][1] == currentPlayer && board[2][0] == currentPlayer) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Check if the board is full
+    private static boolean isBoardFull() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == '-') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
